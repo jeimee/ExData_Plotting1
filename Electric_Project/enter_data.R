@@ -4,12 +4,12 @@ library("data.table")
 library(chron)
 
 #Read in Household Power Consumption Data Set from UC Irvine Machine Learning Repository
-df <- fread("/Users/jaimiechoi/Documents/household_power_consumption.txt")
+df <- fread("/Users/jaimiechoi/Documents/household_power_consumption.txt", na.strings="?")
 
-#Change the Date and Time to Date and Time fields
+#Change the Date and Time to Date/Time Column and subset dataset
 df$Date <- as.Date(df$Date, "%d/%m/%Y")
-df$Time <- times(df$Time)
-
-#Subset dataset for only 2007-02-01 and 2007-02-02
 df_sub <- df[(df$Date == "2007-02-01" | df$Date == "2007-02-02"),]
+df_sub$DT <- as.POSIXct(paste(df_sub$Date, df_sub$Time), format="%Y-%m-%d %H:%M:%S")
 
+#Remove original dataset to save space
+rm(df)
